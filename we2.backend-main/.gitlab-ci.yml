@@ -1,0 +1,29 @@
+# Template for node see:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Nodejs.gitlab-ci.yml
+# Coverage see:
+# https://gist.github.com/rishitells/3c4536131819cff4eba2c8ab5bbb4570
+
+image: node:18
+
+stages:
+  - test
+
+javascript:
+  variables: 
+    NODE_OPTIONS: "--max-old-space-size=4096"
+  stage: test
+  script:
+    - npm install
+    - npm run build # -- we use ts-jest, no need for compilation but to get a red pipeline
+    - npx jest --runInBand
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+# Only shown when merge requests are used
+#      coverage_report:
+#        coverage_format: cobertura
+#        path: coverage/cobertura-coverage.xml
+
+
